@@ -201,14 +201,13 @@ source "drivers/huawei/Kconfig"
 
 source "drivers/firmware/Kconfig"
 
-#/*< DTS2014122904893 shiguojun 20141229 begin */
-source "drivers/goldeneye/Kconfig"
-#/* DTS2014122904893 shiguojun 20141229 end >*/
 
-# /* DTS2014122903419 qidechun/yantongguang 2015-03-13 begin */ 
+source "drivers/goldeneye/Kconfig"
+
 source "drivers/srecorder/Kconfig"
-# /* DTS2014122903419 qidechun/yantongguang 2015-03-13 end */
-#/* < DTS2015031902473 caowei 20150319 begin */
+
 source "drivers/huawei_platform/Kconfig"
-#/* DTS2015031902473 caowei 20150319 end > */
+
+source "drivers/android/Kconfig"
+
 endmenu

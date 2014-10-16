@@ -188,4 +188,6 @@ obj-$(CONFIG_SRECORDER)     += srecorder/
 
 #/* < DTS2015031902473 caowei 20150319 begin */
 obj-$(CONFIG_HUAWEI_DRIVERS)    += huawei_platform/
-#/* DTS2015031902473 caowei 20150319 end > */
+
+obj-$(CONFIG_ANDROID)		+= android/
+
