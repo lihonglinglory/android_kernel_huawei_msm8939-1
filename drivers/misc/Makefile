@@ -72,19 +72,17 @@ obj-$(CONFIG_TI_DRV2667) += ti_drv2667.o
 obj-$(CONFIG_QPNP_MISC) += qpnp-misc.o
 obj-$(CONFIG_QCOM_LIQUID_DOCK)	+= qcom_liquid_dock.o
 obj-y				+= qcom/
-#/* < DTS2014042900710 shenjinming 20140430 begin */
+
 obj-y				+= dsm/
-#/* DTS2014042900710 shenjinming 20140430 end > */
-#/* < DTS2014112602903 zhongming 20141126 begin */
+
 obj-$(CONFIG_HUAWEI_KSTATE) += hw_kstate/
-#/* DTS2014112602903 zhongming 20141126 end > */
-#/* < DTS2015012101808 chenxi 20150121 begin */
+
 obj-$(CONFIG_HUAWEI_RESET_DETECT) += huawei_reset_detect/
-#/* DTS2015012101808 chenxi 20150121 end > */
-#/* < DTS2016032401223 liuanqi 20160324 begin */
+
+obj-$(CONFIG_UID_CPUTIME) 	+= uid_cputime.o
+
 ifeq ($(PRODUCTION_NAME),PRODUCTION_PLE)
 obj-n				+= msm_sar_detect.o
 else
 obj-y				+= msm_sar_detect.o
 endif
-#/* DTS2016032401223 liuanqi 20160324  end > */
