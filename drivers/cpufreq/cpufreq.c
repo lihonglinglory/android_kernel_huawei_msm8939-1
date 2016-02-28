@@ -30,11 +30,6 @@
 #include <linux/tick.h>
 #include <trace/events/power.h>
 
-/* < DTS2015071700385 xujian 20150717 begin */
-#ifdef CONFIG_HUAWEI_MSG_POLICY
-#include <power/msgnotify.h>
-#endif
-/*  DTS2015071700385 xujian 20150717 end > */
 
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
@@ -48,41 +43,6 @@ static DEFINE_RWLOCK(cpufreq_driver_lock);
 static DEFINE_MUTEX(cpufreq_governor_lock);
 static LIST_HEAD(cpufreq_policy_list);
 
-/* <DTS2014071502649 tanyanying 20140714 begin */
-#ifdef CONFIG_HUAWEI_THERMAL
-#define HUAWEI_THERMAL_POLICY_MAX  800000
-/* <DTS2014121202643 xupeipei 20141212 begin*/
-static bool FTM_flag = false;
-static bool recovery_flag = false;
-static int __init early_parse_ftm_flag(char* p)
-{
-      if(p && !strcmp(p,"true"))
-       {
-              FTM_flag = true;
-       }
-       return 0;
-}
-early_param("huawei_ftm",early_parse_ftm_flag);
-
-static int __init early_parse_recovery_flag(char* p)
-{
-      if(p && !strcmp(p,"recovery")) {
-            recovery_flag = true;
-      }
-      return 0;
-}
-early_param("androidboot.huawei_bootmode",early_parse_recovery_flag);
-
-bool get_boot_into_recovery_flag(void)
-{
-    return recovery_flag;
-}
-
-EXPORT_SYMBOL(get_boot_into_recovery_flag);
-
-/* DTS2014121202643 xupeipei 20141212 end>*/
-#endif
-/* DTS2014071502649 tanyanying 20140714 end> */
 
 #ifdef CONFIG_HOTPLUG_CPU
 /*
@@ -662,30 +622,6 @@ static ssize_t show_scaling_setspeed(struct cpufreq_policy *policy, char *buf)
 	return policy->governor->show_setspeed(policy, buf);
 }
 
-/* < DTS2015071700385 xujian 20150717 begin */
-#ifdef CONFIG_HUAWEI_MSG_POLICY
-static ssize_t store_msg_policy(struct cpufreq_policy *policy,
-					const char *buf, size_t count)
-{
-	unsigned int value = 0;
-	unsigned int ret;
-
-	ret = sscanf(buf, "%u", &value);
-	if (ret != 1)
-		return -EINVAL;
-
-	set_msg_threshold(value);
-
-	return count;
-}
-
-static ssize_t show_msg_policy(struct cpufreq_policy *policy, char *buf)
-{
-	return snprintf(buf, PAGE_SIZE, "threshold:%u,max_msg_percent:%u\n", 
-		get_msg_threshold(), get_max_msg_percent());
-}
-#endif
-/*  DTS2015071700385 xujian 20150717 end > */
 
 /**
  * show_bios_limit - show the current cpufreq HW/BIOS limitation
@@ -716,11 +652,7 @@ cpufreq_freq_attr_rw(scaling_min_freq);
 cpufreq_freq_attr_rw(scaling_max_freq);
 cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
-/* < DTS2015071700385 xujian 20150717 begin */
-#ifdef CONFIG_HUAWEI_MSG_POLICY
-cpufreq_freq_attr_rw(msg_policy);
-#endif
-/*  DTS2015071700385 xujian 20150717 end > */
+
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -734,11 +666,7 @@ static struct attribute *default_attrs[] = {
 	&scaling_driver.attr,
 	&scaling_available_governors.attr,
 	&scaling_setspeed.attr,
-/* < DTS2015071700385 xujian 20150717 begin */
-#ifdef CONFIG_HUAWEI_MSG_POLICY
-	&msg_policy.attr,
-#endif
-/*  DTS2015071700385 xujian 20150717 end > */
+
 	NULL
 };
 
@@ -2103,16 +2031,6 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	policy->max = new_policy->max;
 
 
-/* <DTS2014071502649 tanyanying 20140714 begin */
-/* <DTS2014121202643 xupeipei 20141212 begin*/
-#ifdef CONFIG_HUAWEI_THERMAL
-    if(FTM_flag && recovery_flag)
-    {
-        policy->max = HUAWEI_THERMAL_POLICY_MAX;
-    }
-#endif
-/* <DTS2014121202643 xupeipei 20141212 end>*/
-/* DTS2014071502649 tanyanying 20140714 end> */
 	pr_debug("new min and max freqs are %u - %u kHz\n",
 					policy->min, policy->max);
 
@@ -2239,11 +2157,7 @@ static int cpufreq_cpu_callback(struct notifier_block *nfb,
 		switch (action & ~CPU_TASKS_FROZEN) {
 		case CPU_ONLINE:
 			__cpufreq_add_dev(dev, NULL, frozen);
-/* < DTS2015070908364 xujian 20150709 begin */
-#ifdef CONFIG_HUAWEI_KERNEL
-			kobject_uevent(&dev->kobj, KOBJ_ADD);
-#endif
-/* DTS2015070908364 xujian 20150709 end > */
+
 			cpufreq_update_policy(cpu);
 			break;
 
