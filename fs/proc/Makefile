@@ -32,10 +32,6 @@ proc-$(CONFIG_PRINTK)	+= kmsg.o
 proc-$(CONFIG_PROC_PAGE_MONITOR)	+= page.o
 #/* < DTS2014040104155 xufeng 20140401 begin */
 proc-$(CONFIG_APP_INFO)         += app_info.o
-#/* DTS2014040104155 xufeng 20140401 end > */
-#/*< DTS2014120404357 yedapeng 20141201 begin*/
-proc-y  += check_root.o
-#/*DTS2014120404357 yedapeng 20141201 end >*/
-#/* < DTS2014112904825 duanhuan 20141129 begin */
+
 proc-$(CONFIG_FEATURE_HUAWEI_EMERGENCY_DATA) += emerg_data.o
 #/* DTS2014112904825 duanhuan 20141129 end > */

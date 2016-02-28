@@ -64,9 +64,7 @@
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/unistd.h>
-/*< DTS2014120404357 yedapeng 20141201 begin*/
-#include <check_root.h>
-/*DTS2014120404357 yedapeng 20141201 end >*/
+
 #ifndef SET_UNALIGN_CTL
 # define SET_UNALIGN_CTL(a,b)	(-EINVAL)
 #endif
@@ -698,10 +696,7 @@ SYSCALL_DEFINE2(setregid, gid_t, rgid, gid_t, egid)
 	    (egid != (gid_t) -1 && !gid_eq(kegid, old->gid)))
 		new->sgid = new->egid;
 	new->fsgid = new->egid;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!new->gid && (checkroot_setresgid(old->gid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
     return commit_creds(new);
 
 error:
@@ -738,10 +733,7 @@ SYSCALL_DEFINE1(setgid, gid_t, gid)
 		new->egid = new->fsgid = kgid;
 	else
 		goto error;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!gid && (checkroot_setgid(old->gid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
 
 	return commit_creds(new);
 
@@ -846,10 +838,7 @@ SYSCALL_DEFINE2(setreuid, uid_t, ruid, uid_t, euid)
 	retval = security_task_fix_setuid(new, old, LSM_SETID_RE);
 	if (retval < 0)
 		goto error;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!new->uid && (checkroot_setresuid(old->uid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
     return commit_creds(new);
 
 error:
@@ -902,10 +891,7 @@ SYSCALL_DEFINE1(setuid, uid_t, uid)
 	retval = security_task_fix_setuid(new, old, LSM_SETID_ID);
 	if (retval < 0)
 		goto error;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!uid && (checkroot_setuid(old->uid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
 	return commit_creds(new);
 
 error:
@@ -975,10 +961,7 @@ SYSCALL_DEFINE3(setresuid, uid_t, ruid, uid_t, euid, uid_t, suid)
 	retval = security_task_fix_setuid(new, old, LSM_SETID_RES);
 	if (retval < 0)
 		goto error;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!new->uid && (checkroot_setresuid(old->gid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
 	return commit_creds(new);
 
 error:
@@ -1050,10 +1033,7 @@ SYSCALL_DEFINE3(setresgid, gid_t, rgid, gid_t, egid, gid_t, sgid)
 	if (sgid != (gid_t) -1)
 		new->sgid = ksgid;
 	new->fsgid = new->egid;
-    /*< DTS2014120404357 yedapeng 20141201 begin*/
-    if (!new->gid && (checkroot_setresgid(old->gid)))
-        goto error;
-    /*DTS2014120404357 yedapeng 20141201 end >*/
+
     return commit_creds(new);
 
 error:
