@@ -67,9 +67,7 @@ source "fs/quota/Kconfig"
 
 source "fs/autofs4/Kconfig"
 source "fs/fuse/Kconfig"
-#/*< DTS2014112401629 luchao 20141119 begin */
-source "fs/sdcardfs/Kconfig"
-#/* DTS2014112401629 luchao 20141119 end>*/
+
 
 config GENERIC_ACL
 	bool
