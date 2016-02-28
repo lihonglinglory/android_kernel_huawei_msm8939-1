@@ -2143,17 +2143,7 @@ extern int ext4_orphan_add(handle_t *, struct inode *);
 extern int ext4_orphan_del(handle_t *, struct inode *);
 extern int ext4_htree_fill_tree(struct file *dir_file, __u32 start_hash,
 				__u32 start_minor_hash, __u32 *next_hash);
-/* < DTS2015052701547 zengwei 20150619 begin */
-#ifdef CONFIG_SDCARD_FS_CI_SEARCH
-extern int search_dir(struct buffer_head *bh,
-		      char *search_buf,
-		      int buf_size,
-		      struct inode *dir,
-		      const struct qstr *d_name,
-		      unsigned int offset,
-		      struct ext4_dir_entry_2 **res_dir,
-              char *ci_name_buf);
-#else
+
 extern int search_dir(struct buffer_head *bh,
 		      char *search_buf,
 		      int buf_size,
@@ -2161,8 +2151,7 @@ extern int search_dir(struct buffer_head *bh,
 		      const struct qstr *d_name,
 		      unsigned int offset,
 		      struct ext4_dir_entry_2 **res_dir);
-#endif
-/* DTS2015052701547 zengwei 20150619 end > */
+
 extern int ext4_generic_delete_entry(handle_t *handle,
 				     struct inode *dir,
 				     struct ext4_dir_entry_2 *de_del,
@@ -2547,20 +2536,12 @@ extern int htree_inlinedir_to_tree(struct file *dir_file,
 				   struct dx_hash_info *hinfo,
 				   __u32 start_hash, __u32 start_minor_hash,
 				   int *has_inline_data);
-/* < DTS2015052701547 zengwei 20150619 begin */
-#ifdef CONFIG_SDCARD_FS_CI_SEARCH
-extern struct buffer_head *ext4_find_inline_entry(struct inode *dir,
-					const struct qstr *d_name,
-					struct ext4_dir_entry_2 **res_dir,
-					int *has_inline_data,
-                    char* ci_name_buf);
-#else
+
 extern struct buffer_head *ext4_find_inline_entry(struct inode *dir,
 					const struct qstr *d_name,
 					struct ext4_dir_entry_2 **res_dir,
 					int *has_inline_data);
-#endif
-/* DTS2015052701547 zengwei 20150619 end > */
+
 extern int ext4_delete_inline_entry(handle_t *handle,
 				    struct inode *dir,
 				    struct ext4_dir_entry_2 *de_del,
