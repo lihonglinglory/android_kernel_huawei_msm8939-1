@@ -1792,32 +1792,14 @@ static void msm_otg_notify_host_mode(struct msm_otg *motg, bool host_mode)
 static int msm_otg_notify_chg_type(struct msm_otg *motg)
 {
 	static int charger_type;
-	/* < DTS2015012601666 yuanzhen 20150127 begin */
-#ifdef CONFIG_HUAWEI_KERNEL
-	static int chg_type = -1;
-#endif
-	/* DTS2015012601666 yuanzhen 20150127 end > */
 
 	/*
 	 * TODO
 	 * Unify OTG driver charger types and power supply charger types
 	 */
-	/* < DTS2015012601666 yuanzhen 20150127 begin */
-	/* should use the same type to compare */
-#ifdef CONFIG_HUAWEI_KERNEL
-	if (chg_type == motg->chg_type)
-	{
-		return 0;
-	}
-	else
-	{
-		chg_type = motg->chg_type;
-	}
-#else
+
 	if (charger_type == motg->chg_type)
 		return 0;
-#endif
-	/* DTS2015012601666 yuanzhen 20150127 end > */
 
 	if (motg->chg_type == USB_SDP_CHARGER)
 		charger_type = POWER_SUPPLY_TYPE_USB;
@@ -2823,7 +2805,7 @@ static const char *chg_to_string(enum usb_chg_type chg_type)
 #else
 #define MSM_CHG_DCD_TIMEOUT		(750 * HZ/1000) /* 750 msec */
 #endif
-/* DTS2014072309079 sunwenyong 20140724 end>¡¡*/
+/* DTS2014072309079 sunwenyong 20140724 end>\A1\A1*/
 #define MSM_CHG_DCD_POLL_TIME		(50 * HZ/1000) /* 50 msec */
 #define MSM_CHG_PRIMARY_DET_TIME	(50 * HZ/1000) /* TVDPSRC_ON */
 #define MSM_CHG_SECONDARY_DET_TIME	(50 * HZ/1000) /* TVDMSRC_ON */
@@ -5703,9 +5685,7 @@ static int msm_otg_probe(struct platform_device *pdev)
 	}
 
 	motg->usb_psy.name = "usb";
-	/* <DTS2015070803911 tanyanying 20150702 begin */
-	motg->usb_psy.type = POWER_SUPPLY_TYPE_UNKNOWN;
-	/* DTS2015070803911 tanyanying 20150702 end> */
+	motg->usb_psy.type = POWER_SUPPLY_TYPE_USB;
 	motg->usb_psy.supplied_to = otg_pm_power_supplied_to;
 	motg->usb_psy.num_supplicants = ARRAY_SIZE(otg_pm_power_supplied_to);
 	motg->usb_psy.properties = otg_pm_power_props_usb;
