@@ -305,11 +305,6 @@ static void pet_watchdog(struct msm_watchdog_data *wdog_dd)
 	if (slack_ns < wdog_dd->min_slack_ns)
 		wdog_dd->min_slack_ns = slack_ns;
 	wdog_dd->last_pet = time_ns;
-	/* < DTS2015011401955 sihongfang 20150114 begin */
-#ifdef CONFIG_HUAWEI_KERNEL
-	pr_info("%s, current cpu is cpu%d\n", __func__, smp_processor_id());
-#endif
-	/* DTS2015011401955 sihongfang 20150114 end>*/
 	
 }
 
