@@ -31,11 +31,13 @@
 #include <linux/sort.h>
 #include <misc/app_info.h>
 
+
 /* < DTS2015090710570 c00299109 20150910 begin */
 #include <linux/irq.h>
 #include <linux/irqdesc.h>
 #define FPC_IRQS_PENDING 0x00000200
 /* DTS2015090710570 c00299109 20150910 end > */
+
 
 #include "fpc1020.h"
 #include "fpc1020_common.h"
@@ -816,6 +818,7 @@ static int  fpc1020_remove(struct spi_device *spi)
 static int fpc1020_suspend(struct device *dev)
 {
     fpc1020_data_t *fpc1020 = dev_get_drvdata(dev);
+
 /* < DTS2015090710570 c00299109 20150910 begin */
     struct irq_desc *desc = irq_to_desc((unsigned int)fpc1020->irq);
     int error = 0;
@@ -824,6 +827,7 @@ static int fpc1020_suspend(struct device *dev)
     fpc_log_info("ENTER!\n");
 
 /* < DTS2015090710570 c00299109 20150910 begin */
+
     if (desc) {
         if (unlikely(desc->core_internal_state__do_not_mess_with_it & FPC_IRQS_PENDING)) {
             fpc_log_err("unexpected irq pending, do reset!\n");
@@ -833,9 +837,11 @@ static int fpc1020_suspend(struct device *dev)
             }
         }
     }
+
 /* DTS2015090710570 c00299109 20150910 end > */
 
     /* < DTS2015042600127 zhaoyuxia 20150426 begin */
+
     if (device_may_wakeup(&fpc1020->spi->dev))
         enable_irq_wake(fpc1020->irq);
     /* DTS2015042600127 zhaoyuxia 20150426 end > */
