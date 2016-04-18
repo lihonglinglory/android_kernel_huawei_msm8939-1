@@ -56,19 +56,8 @@
 #define _ZONE ZONE_NORMAL
 #endif
 
-/* < DTS2014112602903 zhongming 20141126 begin */
-#ifdef CONFIG_HUAWEI_KSTATE
-#include <linux/hw_kcollect.h>
-#endif
-/* DTS2014112602903 zhongming 20141126 end > */
-/* < DTS2015030702468 zhaiqi 20150307 begin */
-#ifdef CONFIG_HUAWEI_KERNEL_DEBUG
-extern ssize_t write_log_to_exception(const char* category, char level, const char* msg);
-static uint32_t lowmem_debug_level = 2;
-#else
 static uint32_t lowmem_debug_level = 1;
-#endif
-/* DTS2015030702468 zhaiqi 20150307 end > */
+
 static short lowmem_adj[6] = {
 	0,
 	1,
@@ -85,14 +74,6 @@ static int lowmem_minfree[6] = {
 static int lowmem_minfree_size = 4;
 static int lmk_fast_run = 1;
 
-/* < DTS2015042806542 yuanlonglong 20150505 begin */
-/* BEGIN PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-#ifdef CONFIG_LOG_JANK
-/* END   PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-static ulong lowmem_kill_count = 0;
-static ulong lowmem_free_mem = 0;
-#endif
-/* DTS2015042806542 yuanlonglong 20150505 end > */
 static unsigned long lowmem_deathpending_timeout;
 
 #define lowmem_print(level, x...)			\
@@ -401,16 +382,6 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int other_file;
 	unsigned long nr_to_scan = sc->nr_to_scan;
 
-	/* < DTS2015041705211 zhaiqi 20150417 begin */
-#ifdef CONFIG_HUAWEI_KERNEL_DEBUG
-	/* judge if killing the process of the adj == 0
-	 * 0: not kill the adj 0
-	 * 1: kill the adj 0
-	 */
-	int kill_adj_0 = 0;
-#endif
-	/* DTS2015041705211 zhaiqi 20150417 end > */
-
 	if (nr_to_scan > 0) {
 		if (mutex_lock_interruptible(&scan_mutex) < 0)
 			return 0;
@@ -554,42 +525,16 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		if (lowmem_debug_level >= 2 && selected_oom_score_adj == 0) {
 			/* < DTS2015041705211 zhaiqi 20150417 begin */
 			/* move the write function down below */
-			/* < DTS2015030702468 zhaiqi 20150307 begin */
-#ifdef CONFIG_HUAWEI_KERNEL_DEBUG
-			kill_adj_0 = 1;
-#endif
-			/* DTS2015030702468 zhaiqi 20150307 end > */
-			/* DTS2015041705211 zhaiqi 20150417 end > */
 			show_mem(SHOW_MEM_FILTER_NODES);
 			dump_tasks(NULL, NULL);
 			show_mem_call_notifiers();
 		}
 
 		lowmem_deathpending_timeout = jiffies + HZ;
-/* < DTS2015042806542 yuanlonglong 20150505 begin */
-/* BEGIN PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-#ifdef CONFIG_LOG_JANK
-/* END   PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-		lowmem_kill_count++;
-		lowmem_free_mem += selected_tasksize * (long)(PAGE_SIZE / 1024) / 1024;
-#endif
-/* DTS2015042806542 yuanlonglong 20150505 end > */
-/* < DTS2014112602903 zhongming 20141126 begin */
-#ifdef CONFIG_HUAWEI_KSTATE
-		hwkillinfo(selected->tgid, SIGKILL);
-#endif
-/* DTS2014112602903 zhongming 20141126 end > */
-
 		send_sig(SIGKILL, selected, 0);
 		set_tsk_thread_flag(selected, TIF_MEMDIE);
 		rem -= selected_tasksize;
 		rcu_read_unlock();
-		/* < DTS2015041705211 zhaiqi 20150417 begin */
-#ifdef CONFIG_HUAWEI_KERNEL_DEBUG
-		if (1 == kill_adj_0)
-			write_log_to_exception("LMK-EXCEPTION", 'C', "lower memory killer exception");
-#endif
-		/* DTS2015041705211 zhaiqi 20150417 end > */
 		/* give the system time to free up the memory */
 		msleep_interruptible(20);
 		trace_almk_shrink(selected_tasksize, ret,
@@ -714,15 +659,6 @@ module_param_array_named(minfree, lowmem_minfree, uint, &lowmem_minfree_size,
 			 S_IRUGO | S_IWUSR);
 module_param_named(debug_level, lowmem_debug_level, uint, S_IRUGO | S_IWUSR);
 module_param_named(lmk_fast_run, lmk_fast_run, int, S_IRUGO | S_IWUSR);
-/* < DTS2015042806542 yuanlonglong 20150505 begin */
-/* BEGIN PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-#ifdef CONFIG_LOG_JANK
-/* END   PN: DTS2015082405074,Modified by gWX277684, 2015/8/24*/
-module_param_named(kill_count, lowmem_kill_count, ulong, S_IRUGO | S_IWUSR);
-module_param_named(free_mem, lowmem_free_mem, ulong, S_IRUGO | S_IWUSR);
-#endif
-/* DTS2015042806542 yuanlonglong 20150505 end > */
-
 
 module_init(lowmem_init);
 module_exit(lowmem_exit);
