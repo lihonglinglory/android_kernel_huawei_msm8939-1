@@ -1055,9 +1055,7 @@ static inline int search_dirblock(struct buffer_head *bh,
             d_name, offset, res_dir);
 
 
-{
-    return search_dir(bh, bh->b_data, dir->i_sb->s_blocksize, dir,
-            d_name, offset, res_dir);
+
 }
 
 /*
