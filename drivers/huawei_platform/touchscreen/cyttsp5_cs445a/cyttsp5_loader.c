@@ -1933,7 +1933,7 @@ static int cyttsp5_loader_probe(struct device *dev)
 	struct cyttsp5_loader_data *ld;
 	struct cyttsp5_platform_data *pdata = dev_get_platdata(dev);
 	int rc;
-	bool recovery_mode = false;
+/*	bool recovery_mode = false;*/
 
 	if (!pdata || !pdata->loader_pdata) {
 		tp_log_err( "%s: Missing platform data\n", __func__);
@@ -2012,13 +2012,13 @@ static int cyttsp5_loader_probe(struct device *dev)
 #ifdef CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_MANUAL_TTCONFIG_UPGRADE
 	mutex_init(&ld->config_lock);
 #endif
-
+/*
 	wake_lock_init(&cd->fw_upgrade_lock, WAKE_LOCK_SUSPEND, "fw_upgrade_wakelock");
 
 	recovery_mode = get_boot_into_recovery_flag();
 	tp_log_info("%s, recovery_mode = %d\n", __func__, recovery_mode);
 	if( recovery_mode == false)
-	{
+	{ */
 	#ifdef UPGRADE_FW_AND_CONFIG_IN_PROBE
 		/* Call FW and config upgrade directly in probe */
 		cyttsp5_fw_and_config_upgrade(&ld->fw_and_config_upgrade);
@@ -2026,7 +2026,7 @@ static int cyttsp5_loader_probe(struct device *dev)
 		INIT_WORK(&ld->fw_and_config_upgrade, cyttsp5_fw_and_config_upgrade);
 		schedule_work(&ld->fw_and_config_upgrade);
 	#endif
-	}
+/*	}  */
 
 	/* < DTS2015010501865 songrongyuan 20140105 begin */
 	tp_log_warning( "%s: Successful probe %s\n", __func__, dev_name(dev));
