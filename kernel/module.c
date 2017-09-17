@@ -64,12 +64,6 @@
 #include <uapi/linux/module.h>
 #include "module-internal.h"
 
-/* < DTS2014121606878 chenjikun 20141216 begin */
-#ifdef CONFIG_HUAWEI_DSM
-#include <linux/wcnss_wlan.h>
-#endif
-/* DTS2014121606878 chenjikun 20141216 end > */
-
 #define CREATE_TRACE_POINTS
 #include <trace/events/module.h>
 
@@ -1204,14 +1198,7 @@ static int check_version(Elf_Shdr *sechdrs,
 bad_version:
 	printk("%s: disagrees about version of symbol %s\n",
 	       mod->name, symname);
-/* < DTS2014121606878 chenjikun 20141216 begin */
-#ifdef CONFIG_HUAWEI_DSM
-	if(NULL != strstr(mod->name,"wlan"))
-	{
-	    wifi_dsm_report_num(DSM_WIFI_ROOT_NOT_RIGHT_ERR,"root is not right",0);
-	}
-#endif
-/* DTS2014121606878 chenjikun 20141216 end > */
+
 	return 0;
 }
 
