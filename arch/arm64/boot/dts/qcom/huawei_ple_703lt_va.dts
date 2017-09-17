@@ -80,3 +80,4 @@
 };
 /* DTS2015112101477 lwx247446 20151121 end > */
 /* DTS2015112007164 lwx247446 20151120 end > */
+#include "cyanogenmod-huawei-common.dtsi"
